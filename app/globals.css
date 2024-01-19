@@ -31,3 +31,15 @@ body {
     text-wrap: balance;
   }
 }
+
+.frosted-glass {
+  backdrop-filter: blur(10px); /* Adjust the blur amount as needed */
+  background-color: rgba(255, 255, 255, 0.2); /* Adjust the opacity as needed */
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #E7E7E7 1.14%, #9E9E9E 28.83%, #F2F2F2 57.49%, #949494 89.98%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
