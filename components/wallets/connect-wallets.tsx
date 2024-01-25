@@ -39,25 +39,6 @@ const ConnectWallets = ({ show, setShow}: Props) => {
             </li>
           </div>
         ))}
-        {/* <div className='flex mt-6 w-[281px] h-[56px] px-[32px] py-[16px] pl-[24px] rounded-[10px] border border-solid gap-[10px] bg-custom-gradient-list'>
-          <img src={`${metamask.src}`} alt="Logo" className="" />
-          <li onClick={() => null} className="">Connect Metamask</li>
-        </div>
-
-        <div className='flex mt-6 w-[281px] h-[56px] px-[32px] py-[16px] pl-[24px] rounded-[10px] border border-solid gap-[10px] bg-custom-gradient-list'>
-          <img src={`${portis.src}`} alt="Logo" className="" />
-          <li onClick={() => null} className="">Connect Portis</li>
-        </div>
-
-        <div className='flex mt-6 w-[281px] h-[56px] px-[32px] py-[16px] pl-[24px] rounded-[10px] border border-solid gap-[10px] bg-custom-gradient-list'>
-          <img src={`${torus.src}`} alt="Logo" className="" />
-          <li onClick={() => null} className="">Connect Torus</li>
-        </div>
-
-        <div className='flex mt-6 w-[281px] h-[56px] px-[32px] py-[16px] pl-[24px] rounded-[10px] border border-solid gap-[10px] bg-custom-gradient-list'>
-          <img src={`${walletlink.src}`} alt="Logo" className="w-[24px] h-[24px]" />
-          <li onClick={() => null} className="">Connect Walletlink</li>
-        </div> */}
       </ul>
       {error && <div>{error.message}</div>}
       <div className='flex mt-8'>
