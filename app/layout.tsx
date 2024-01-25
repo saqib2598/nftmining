@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import bg from '../public/images/BG.png';
+import { Web3Provider } from "@ethersproject/providers";
+import { Web3ReactProvider } from "@web3-react/core";
+import connectors from "@/utils/connectors";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,8 +19,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body style={{ backgroundImage: `url(${bg.src})` }} className={inter.className}>{children}</body>
-    </html>
+    <Web3ReactProvider connectors={connectors}>
+      <html lang="en">
+        <body style={{ backgroundImage: `url(${bg.src})` }} className={inter.className}>{children}</body>
+      </html>
+    </Web3ReactProvider>
   );
 }

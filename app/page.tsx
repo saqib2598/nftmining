@@ -4,18 +4,34 @@ import NftForm from "@/components/forms/nft-form";
 import Navbar from "@/components/header/navbar";
 import ConnectWallets from "@/components/wallets/connect-wallets";
 import { useState } from "react";
-import upload_icon from "@/public/images/upload_icon.svg";
 import Footer from "@/components/footer/footer";
+import Loader from "@/components/loaders/circular-loader";
+import { useWeb3React } from "@web3-react/core";
+import { injected } from "wagmi/connectors";
+import { portis, torus, walletlink } from "web3modal/dist/providers/connectors";
 
 const Home = () => {
-
+  const [loading, setLoading] = useState(false);
   const [showWallets, setShowWallets] = useState(false);
-  const [wallets, setWallets] = useState([
-    {id: 1, name: 'Metamask'},
-    {id: 2, name: 'Portis'},
-    {id: 3, name: 'Torus'},
-    {id: 4, name: 'Walletlink'}
-  ]);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const { activate, account } = useWeb3React();
+
+  const connectMetaMask = () => {
+    activate(injected);
+  };
+
+  const connectPortis = () => {
+    activate(portis);
+  };
+
+  const connectTorus = () => {
+    activate(torus);
+  };
+
+  const connectWalletLink = () => {
+    activate(walletlink);
+  };
 
   return (
     <div>
@@ -23,6 +39,7 @@ const Home = () => {
       <Navbar
         setShowWallets={setShowWallets}
       />
+      
       {/* Jumbotron */}
       <div className="flex items-center justify-center mt-5 mx-auto w-[1140px] h-[216.14px] top-[113.94px] left-[150px] rounded-lg border border-gray-300 frosted-glass">
         <div className="text-center">
@@ -31,21 +48,41 @@ const Home = () => {
         </div>
       </div>
       
+      {/* Loader */}
+      {
+        loading && (
+          <Loader />
+        )
+      }
+      
+      {/* Messages */}
+      <div className="mt-8 flex justify-center items-center">
+        {successMessage && <div className="alert alert-success">{successMessage}</div>}
+        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+      </div>
       {/* NFT form */}
       <div className="flex justify-center items-center">
-        <NftForm />
+        <NftForm
+          setLoading={setLoading}
+          setSuccessMessage={setSuccessMessage}
+          setErrorMessage={setErrorMessage}
+        />
       </div>
       
       {/* Right rail */}
       {
         showWallets && (
           <ConnectWallets
-            wallets={wallets}
             show={showWallets}
             setShow={setShowWallets}
+            connectMetaMask={connectMetaMask}
+            connectPortis={connectPortis}
+            connectTorus={connectTorus}
+            connectWalletLink={connectWalletLink}
           />
         )
       }
+      
       {/* Footer */}
       <Footer />
     </div>

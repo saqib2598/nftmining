@@ -5,12 +5,15 @@ import torus from '../../public/images/Torus.svg';
 import walletlink from '../../public/images/walletlink.svg';
 
 interface Props {
-  wallets: Array<{id: number, name: string}>;
   show: boolean;
   setShow: (show: boolean) => void;
+  connectMetaMask: () => void;
+  connectPortis: () => void;
+  connectTorus: () => void;
+  connectWalletLink: () => void;
 }
 
-const ConnectWallets = ({ wallets, show, setShow }: Props) => {
+const ConnectWallets = ({ show, setShow, connectMetaMask, connectPortis, connectTorus, connectWalletLink}: Props) => {
   return (
     <div className={`fixed top-0 right-0 w-900 h-full bg-black text-white p-4 transform transition-transform duration-300 ease-in-out ${show ? 'translate-x-0' : 'translate-x-full'}`}>
       <button onClick={() => setShow(false)} className="absolute top-2 right-2 text-2xl">
@@ -20,22 +23,22 @@ const ConnectWallets = ({ wallets, show, setShow }: Props) => {
       <ul>
         <div className='flex mt-6 w-[281px] h-[56px] px-[32px] py-[16px] pl-[24px] rounded-[10px] border border-solid gap-[10px] bg-custom-gradient-list'>
           <img src={`${metamask.src}`} alt="Logo" className="" />
-          <li className="">Connect Metamask</li>
+          <li onClick={() => connectMetaMask} className="">Connect Metamask</li>
         </div>
 
         <div className='flex mt-6 w-[281px] h-[56px] px-[32px] py-[16px] pl-[24px] rounded-[10px] border border-solid gap-[10px] bg-custom-gradient-list'>
           <img src={`${portis.src}`} alt="Logo" className="" />
-          <li className="">Connect Portis</li>
+          <li onClick={() => connectPortis} className="">Connect Portis</li>
         </div>
 
         <div className='flex mt-6 w-[281px] h-[56px] px-[32px] py-[16px] pl-[24px] rounded-[10px] border border-solid gap-[10px] bg-custom-gradient-list'>
           <img src={`${torus.src}`} alt="Logo" className="" />
-          <li className="">Connect Torus</li>
+          <li onClick={() => connectTorus} className="">Connect Torus</li>
         </div>
 
         <div className='flex mt-6 w-[281px] h-[56px] px-[32px] py-[16px] pl-[24px] rounded-[10px] border border-solid gap-[10px] bg-custom-gradient-list'>
           <img src={`${walletlink.src}`} alt="Logo" className="w-[24px] h-[24px]" />
-          <li className="">Connect Walletlink</li>
+          <li onClick={() => connectWalletLink} className="">Connect Walletlink</li>
         </div>
       </ul>
 
