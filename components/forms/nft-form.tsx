@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import upload_icon from "@/public/images/upload_icon.svg";
 import axios from 'axios';
 import FormData from 'form-data';
+import { useAccount, useContractWrite } from 'wagmi';
+import conractAbi from '../../utils/contract-abi.json';
 
 interface Props {
   setLoading: (loading: boolean) => void;
@@ -13,6 +15,8 @@ const NftForm = ({setLoading, setSuccessMessage, setErrorMessage}: Props) => {
   
   const [fileName, setFileName] = useState('');
 
+  const { isConnected } = useAccount();
+
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     if (file) {
@@ -22,10 +26,52 @@ const NftForm = ({setLoading, setSuccessMessage, setErrorMessage}: Props) => {
     }
   };
 
+  const { write: mintToken, isLoading: isMintLoading, error: mintError, isSuccess: mintSuccess } = useContractWrite({
+    address: `0x3D216932E996c025E1d417c0396b1105a68963c6`,
+    abi: conractAbi.abi,
+    functionName: 'mint',
+    mode: 'recklesslyUnprepared'
+  });
+
+  const uploadToIPFS = async (title: any, description: any, file: any) => {
+    const formData = new FormData();
+    formData.append('file', file); // Append the file object directly
+
+    // Add metadata and options
+    const pinataMetadata = JSON.stringify({ name: title });
+    formData.append('pinataMetadata', pinataMetadata);
+
+    const pinataOptions = JSON.stringify({ cidVersion: 0 });
+    formData.append('pinataOptions', pinataOptions);
+    
+    try {
+          const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+          headers: {
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_PINATA_API_KEY}`
+          }
+        })
+        if (res) {
+          return res;
+        } else {
+          setErrorMessage('Error pushing to pinata');
+        }
+    } catch (error: any) {
+      console.error(error);
+      setErrorMessage(`Error minting NFT. ${error.message}`);
+    }
+  }
+  
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     // Handle form submission logic here
     setLoading(true);
+
+    if (!isConnected) {
+      // Display an error message to the user
+      setLoading(false);
+      setErrorMessage('Please connect your wallet before continuing');
+      return;
+    }
 
     const title = e.target.title.value;
     const description = e.target.description.value;
@@ -36,31 +82,14 @@ const NftForm = ({setLoading, setSuccessMessage, setErrorMessage}: Props) => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('file', fileInput); // Append the file object directly
-
-    // Add metadata and options
-    const pinataMetadata = JSON.stringify({ name: title });
-    formData.append('pinataMetadata', pinataMetadata);
-
-    const pinataOptions = JSON.stringify({ cidVersion: 0 });
-    formData.append('pinataOptions', pinataOptions);
-
-    try {
-      const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-        headers: {
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_PINATA_API_KEY}`
-        }
-      });
-      console.log(res.data);
-      if (res) {
+    const metadataUrl = await uploadToIPFS(title, description, fileInput);
+    if (metadataUrl) {
+      try {
+        mintToken?.({recklesslySetUnpreparedArgs: metadataUrl.data.IpfsHash});
         setSuccessMessage('NFT minted successfully');
-      } else {
-        setErrorMessage('Error minting NFT');
+      } catch (error: any) {
+        setErrorMessage(`Error minting NFT. ${error.message}`);
       }
-    } catch (error: any) {
-      console.error(error);
-      setErrorMessage(`Error minting NFT. ${error.message}`);
     }
     setLoading(false);
   };

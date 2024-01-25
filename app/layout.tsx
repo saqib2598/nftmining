@@ -1,6 +1,5 @@
 'use client'
 
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import bg from '../public/images/BG.png';
@@ -18,7 +17,7 @@ import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 // Two popular providers are Alchemy (alchemy.com) and Infura (infura.io)
 const { chains, provider, webSocketProvider } = configureChains(
   [mainnet],
-  [alchemyProvider({ apiKey: 'yourAlchemyApiKey' }), publicProvider()],
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || '' }), publicProvider()],
 )
 
 // Set up client
