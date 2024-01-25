@@ -6,32 +6,12 @@ import ConnectWallets from "@/components/wallets/connect-wallets";
 import { useState } from "react";
 import Footer from "@/components/footer/footer";
 import Loader from "@/components/loaders/circular-loader";
-import { useWeb3React } from "@web3-react/core";
-import { injected } from "wagmi/connectors";
-import { portis, torus, walletlink } from "web3modal/dist/providers/connectors";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const [showWallets, setShowWallets] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const { activate, account } = useWeb3React();
-
-  const connectMetaMask = () => {
-    activate(injected);
-  };
-
-  const connectPortis = () => {
-    activate(portis);
-  };
-
-  const connectTorus = () => {
-    activate(torus);
-  };
-
-  const connectWalletLink = () => {
-    activate(walletlink);
-  };
 
   return (
     <div>
@@ -75,10 +55,6 @@ const Home = () => {
           <ConnectWallets
             show={showWallets}
             setShow={setShowWallets}
-            connectMetaMask={connectMetaMask}
-            connectPortis={connectPortis}
-            connectTorus={connectTorus}
-            connectWalletLink={connectWalletLink}
           />
         )
       }
